@@ -61,9 +61,15 @@ namespace LineBotSamples.Controllers
             restRequest.AddHeader("X-Line-ChannelSecret", this.xdoc.Root.Element("ChannelSecret").Value);
             restRequest.AddHeader("X-Line-Trusted-User-With-ACL", this.xdoc.Root.Element("ChannelMID").Value);
 
+            var friends =
+                new[]
+                {
+                    this.GetFriendMID("莊志弘")
+                };
+
             restRequest.AddJsonBody(new
             {
-                to = new[] { "u5912407b444e54885d00111f7b0ce375" },
+                to = friends,
                 toChannel = 1383378250,
                 eventType = "138311608800106203",
                 content = new
@@ -77,6 +83,14 @@ namespace LineBotSamples.Controllers
             var restResponse = restClient.Execute(restRequest);
 
             return View("Index");
+        }
+
+        private string GetFriendMID(string name)
+        {
+            var friendElements = this.xdoc.Root.Element("Friends").Elements();
+            var friendElement = friendElements.Where(f => f.Attribute("Name").Value == name).Single();
+
+            return friendElement.Attribute("MID").Value;
         }
     }
 }

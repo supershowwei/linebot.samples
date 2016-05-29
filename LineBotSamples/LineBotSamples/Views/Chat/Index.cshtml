@@ -3,5 +3,13 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
+<h2>Chat</h2>
 
+<form id="form1" action="/Chat/Send" method="post">
+    <p>
+        <input id="message" type="text" />
+    </p>
+    <p>
+        <input id="send" type="submit" value="送出訊息" />
+    </p>
+</form>

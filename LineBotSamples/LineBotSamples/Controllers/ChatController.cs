@@ -13,5 +13,11 @@ namespace LineBotSamples.Controllers
         {
             return View();
         }
+
+        public ActionResult Send(string message)
+        {
+
+            return View("Index");
+        }
     }
 }

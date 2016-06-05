@@ -1,18 +1,59 @@
 ﻿
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Customer Service";
 }
 
-<h2>Chat</h2>
+<h2>Customer Service</h2>
 
-<form id="form1" action="/Chat/Send" method="post">
-    <p>
-        <input id="message" name="message" type="text" />
-    </p>
-    <p>
-        <input id="send" type="submit" value="送出訊息" />
-    </p>
-    <p>
-        @ViewBag.ReceivedMessage
-    </p>
-</form>
+<div class="form-inline">
+    <input type="text" class="form-control" id="message" name="message" />
+    <input type="hidden" id="customerId" name="customerId" />
+    <input type="button" class="btn btn-default" id="send" value="送出訊息" />
+</div>
+<div>&nbsp;</div>
+<div class="panel panel-primary" style="width: 50%;">
+    <div class="panel-heading">對話記錄</div>
+    <div class="panel-body" id="conversations"></div>
+</div>
+@if (false)
+{
+    <script src="~/Scripts/jquery-1.10.2.js"></script>
+}
+@section scripts {
+    <script src="~/Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script>
+        $(function () {
+            // 宣告 SignalR Hub
+            var customerServiceHub = $.connection.customerServiceHub;
+
+            // 宣告 Client 端可以被 Server 呼叫的方法
+            customerServiceHub.client.chat = function (message, customerId, customerPlace, customerName) {
+                $("#conversations").append("<p class=\"text-left\">" + customerPlace + "的" + customerName + "說：<br />" + message + "</p>");
+            };
+
+            customerServiceHub.client.inbound = function (message, customerId) {
+                $("#conversations").append("<p class=\"text-left\">" + message + "</p>");
+                $("#customerId").val(customerId);
+            };
+
+            // 開始與 SignalR 伺服器連線
+            $.connection.hub.start()
+                .done(function () {
+                    $('#send').click(function () {
+                        $("#conversations").append("<p class=\"text-right\">你說：<br />" + $("#message").val() + "</p>");
+                        $.ajax({
+                            url: '/Chat/Send',
+                            method: 'POST',
+                            data: {
+                                message: $("#message").val(),
+                                customerId: $("#customerId").val()
+                            }
+                        });
+
+                        $("#message").val("");
+                    });
+                });
+        });
+    </script>
+}

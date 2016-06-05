@@ -30,11 +30,13 @@
         @RenderBody()
         <hr />
         <footer>
-            <p>&copy; @DateTime.Now.Year - My ASP.NET Application</p>
+            <p><a href="https://www.facebook.com/softkitchen" target="_blank">softkitchen</a> &copy; @DateTime.Now.Year - PunchIt</p>
         </footer>
     </div>
 
     <script src="~/Scripts/jquery-1.10.2.min.js"></script>
     <script src="~/Scripts/bootstrap.min.js"></script>
+
+    @RenderSection("scripts")
 </body>
 </html>

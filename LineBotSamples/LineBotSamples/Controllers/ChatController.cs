@@ -52,11 +52,11 @@ namespace LineBotSamples.Controllers
 
                 this.SendMessage("客人您好，請問該怎麼稱呼您呢？", customer.Attribute("Id").Value);
             }
-            else if (customer.Attribute("FollowId").Value.Equals("0"))
+            else if (customer.Attribute("FlowId").Value.Equals("0"))
             {
                 // 儲存客戶稱呼
                 customer.Attribute("Name").Value = results[0].content.text;
-                customer.Attribute("FollowId").Value = "1";
+                customer.Attribute("FlowId").Value = "1";
 
                 this.SaveCustomers(xml);
 
@@ -64,11 +64,11 @@ namespace LineBotSamples.Controllers
                     $"{customer.Attribute("Name").Value}，您好！請問您住哪裡？",
                     customer.Attribute("Id").Value);
             }
-            else if (customer.Attribute("FollowId").Value.Equals("1"))
+            else if (customer.Attribute("FlowId").Value.Equals("1"))
             {
                 // 儲存客戶居住地
                 customer.Attribute("Place").Value = results[0].content.text;
-                customer.Attribute("FollowId").Value = "2";
+                customer.Attribute("FlowId").Value = "2";
 
                 this.SaveCustomers(xml);
 
@@ -83,14 +83,14 @@ namespace LineBotSamples.Controllers
                     $"{customer.Attribute("Place").Value}的{customer.Attribute("Name").Value}來了，正在線上。",
                     customer.Attribute("Id").Value);
             }
-            else if (customer.Attribute("FollowId").Value.Equals("2"))
+            else if (customer.Attribute("FlowId").Value.Equals("2"))
             {
                 var customerServiceHub = GlobalHost.ConnectionManager.GetHubContext<CustomerServiceHub>();
 
                 if (text.StartsWith("再見", StringComparison.Ordinal))
                 {
                     // 客戶道再見
-                    customer.Attribute("FollowId").Value = "0";
+                    customer.Attribute("FlowId").Value = "0";
 
                     this.SaveCustomers(xml);
 
@@ -129,7 +129,7 @@ namespace LineBotSamples.Controllers
                     new XAttribute("Id", id),
                     new XAttribute("Name", string.Empty),
                     new XAttribute("Place", string.Empty),
-                    new XAttribute("FollowId", 0));
+                    new XAttribute("FlowId", 0));
 
             xml.Root.Add(customer);
 
